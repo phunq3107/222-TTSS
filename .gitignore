@@ -1,1 +1,5 @@
 lbp_simple
+*.o
+*.out
+*.exe
+*.btr

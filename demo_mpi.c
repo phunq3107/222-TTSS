@@ -23,6 +23,10 @@ int main(int argc, char** argv) {
     if (world_rank == 0) {
         int value = 123;
 
+        // send(*array,n,MPI_INT, cas.., 0, MPI_COMM_WORLD)
+        // receive()
+    
+
         // Send jobs to all other processes
         for (int core=1; core < world_size; core++){
             printf("Sending job to core %d\n", core);
@@ -43,6 +47,7 @@ int main(int argc, char** argv) {
 
             // Wait for a job completion message from any source
             remain -= 1;
+            // MPI(*arr, size,MPI_INT, (0,1,2),0,MPI_COMM_WORLD,
             MPI_Recv(&value, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
             printf("Sending new job to core %d\n", status.MPI_SOURCE);
 
