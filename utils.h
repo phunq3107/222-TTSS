@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #define fori(n) for (int i = 0; i < n; i++)
 #define forj(n) for (int j = 0; j < n; j++)
+
+long long timeInMilliseconds(void)
+{
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    return (((long long)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
+}
 
 int min(int a, int b)
 {

@@ -113,6 +113,7 @@ int main(int argc, char **argv)
     init_data("data/data1.txt");
     printf("word_size=%d, word_rank=%d, size=%d, roi_lb=%d, roi_ub=%d\n", world_size, world_rank, size, roi_lb(), roi_ub());
 
+    long long begin = timeInMilliseconds();
     fori(size)
     {
         if (is_owner(i))
@@ -142,6 +143,9 @@ int main(int argc, char **argv)
             publish_data(i);
         }
     }
+
+    long long end = timeInMilliseconds();
+    printf("Core %d done in %lld millisecond!!!\n", world_rank, (end - begin));
 
     MPI_Finalize();
 }
