@@ -5,6 +5,7 @@
 
 #define ARRAY_SIZE 1000
 #define SUBARRAY_SIZE 50
+#define INFINITY 999999999
 
 clock_t start, end;
 double cpu_time_used;
@@ -13,6 +14,26 @@ double time4process = 0;
 
 // mpicc demo_FW_1.c -o demo_FW_1  
 // mpirun -np 3 ./demo_FW_1
+
+void log_value(float val, int val2)
+{
+    FILE *fp;
+
+    // Open the file for appending
+    fp = fopen("log.txt", "a");
+
+    // Check if the file was opened successfully
+    if (fp == NULL) {
+        printf("Error: could not open file\n");
+        return;
+    }
+
+    // Write the value to the end of the file
+    fprintf(fp, "%f \n", val);
+
+    // Close the file
+    fclose(fp);
+}
 
 int main(int argc, char** argv) {
   int rank, size;
@@ -31,7 +52,12 @@ int main(int argc, char** argv) {
       for (int i = 0; i < ARRAY_SIZE; i++) {
         array[i] = (int*) malloc(ARRAY_SIZE * sizeof(int));
         for (int j = 0; j < ARRAY_SIZE; j++) {
-          array[i][j] = rand();
+          if (rand()%ARRAY_SIZE < 5){
+            array[i][j] = rand()%100;
+          }
+          else{
+            array[i][j] = INFINITY;
+          }
         }
       }
     }
@@ -48,6 +74,7 @@ int main(int argc, char** argv) {
     int dest = 1;
     clock_t startSend;;
     for (int k = 0; k < ARRAY_SIZE; k ++){
+      start = clock();
       // printf("start sequent %d \n",k);
       for (int i = 0; i < ARRAY_SIZE; i += SUBARRAY_SIZE) {
         for (int j = 0; j < ARRAY_SIZE; j += SUBARRAY_SIZE) {
@@ -112,6 +139,9 @@ int main(int argc, char** argv) {
         time4process += ((double) (clock() - startProcess)) / CLOCKS_PER_SEC;
         dest -= 1;
       }
+      end = clock();
+      cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+      log_value(cpu_time_used,0);
     }
 
     
@@ -159,9 +189,7 @@ int main(int argc, char** argv) {
 
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("Time measure in core %d : %f \n",rank,cpu_time_used);
-  printf("Time use for process in core %d : %f \n",rank,time4process);
-  printf("Time use for send core %d : %f \n",rank,time4Send);
+  printf("master %d %d %f %f\n",size,rank,cpu_time_used,time4process);
   
   MPI_Finalize();
   return 0;
