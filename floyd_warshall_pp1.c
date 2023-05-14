@@ -189,7 +189,7 @@ int main(int argc, char** argv) {
 
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("master %d %d %f %f\n",size,rank,cpu_time_used,time4process);
+  printf("%d %d %f %f\n",size,rank,cpu_time_used,time4process);
   
   MPI_Finalize();
   return 0;
