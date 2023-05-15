@@ -74,7 +74,6 @@ int main(int argc, char** argv) {
     int dest = 1;
     clock_t startSend;;
     for (int k = 0; k < ARRAY_SIZE; k ++){
-      start = clock();
       // printf("start sequent %d \n",k);
       for (int i = 0; i < ARRAY_SIZE; i += SUBARRAY_SIZE) {
         for (int j = 0; j < ARRAY_SIZE; j += SUBARRAY_SIZE) {
@@ -139,9 +138,6 @@ int main(int argc, char** argv) {
         time4process += ((double) (clock() - startProcess)) / CLOCKS_PER_SEC;
         dest -= 1;
       }
-      end = clock();
-      cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-      log_value(cpu_time_used,0);
     }
 
     
